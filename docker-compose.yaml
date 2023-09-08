@@ -1,16 +1,9 @@
-# Spring for Apache Kafka Demo
-Apache Kafka is a distributed and fault-tolerant stream processing system.
-
-## Setup Kafka using Docker Compose
-Docker Compose tool is handy for managing service setups. The Kafka cluster requires Zookeeper and Kafka Brokers.
-
-```
 version: '3'
 services:
   zookeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
-    ports: 
+    ports:
       - "2181:2181"
     networks:
       - kafka-net
@@ -32,18 +25,3 @@ services:
 networks:
   kafka-net:
     driver: bridge
-```
-
-## Start the Kafka Cluster
-```
-docker-compose up -d
-```
-The above command will simply start the Zookeeper and Kafka containers in detached mode. The -d mode ensures that the
-container runs in the background.
-
-## Verify the Kafka Cluster
-In order to verify that the Kafka Cluster is running successfully, run the following command to see the running
-containers:
-```
-docker-compose ps
-```
