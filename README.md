@@ -47,3 +47,64 @@ containers:
 ```
 docker-compose ps
 ```
+
+# Quick Tour
+To use the Apache Kafka with Spring, first, you must install and run Apache Kafka. Then you must declare a dependency
+in your build tool:
+```
+<dependency>
+  <groupId>org.springframework.kafka</groupId>
+  <artifactId>spring-kafka</artifactId>
+</dependency>
+```
+
+## Spring Boot Consumer App
+Here is a minimal consumer application:
+```
+@SpringBootApplication
+public class KafkaDemoApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(KafkaDemoApplication.class, args);
+	}
+
+	@Bean
+	public NewTopic topic() {
+		return TopicBuilder
+				.name("topic1")
+				.partitions(10)
+				.replicas(1)
+				.build();
+	}
+
+	@KafkaListener(id = "my-group", topics = "topic1")
+	public void consumer(String message) {
+		System.out.println("Consumed message: " + message);
+	}
+}
+```
+
+## Spring Boot Producer App
+Here is a minimal producer application:
+```
+@SpringBootApplication
+public class KafkaDemoApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(KafkaDemoApplication.class, args);
+	}
+
+	@Bean
+	public NewTopic topic() {
+		return TopicBuilder
+				.name("topic1")
+				.partitions(10)
+				.replicas(1)
+				.build();
+	}
+
+	@Bean
+	public ApplicationRunner runner(KafkaTemplate<String, String> template) {
+		return args -> template.send("topic1", "Hello World!");
+	}
+}
